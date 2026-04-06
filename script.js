@@ -5,9 +5,11 @@ const btn = document.getElementById("download-images-button");
 const loadingDiv = document.createElement("div");
 loadingDiv.id = "loading";
 loadingDiv.textContent = "Loading...";
+loadingDiv.style.display = "none";
 
 const errorDiv = document.createElement("div");
 errorDiv.id = "error";
+errorDiv.style.color = "red";
 
 document.body.insertBefore(loadingDiv, output);
 document.body.insertBefore(errorDiv, output);
@@ -50,5 +52,5 @@ function downloadImages() {
     });
 }
 
-// ✅ Only trigger on button click
+// Trigger on button click
 btn.addEventListener("click", downloadImages);
