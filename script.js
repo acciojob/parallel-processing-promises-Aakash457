@@ -1,13 +1,13 @@
 const output = document.getElementById("output");
+const btn = document.getElementById("download-images-button");
 
-// Create additional UI containers
+// Create loading & error divs
 const loadingDiv = document.createElement("div");
 loadingDiv.id = "loading";
 loadingDiv.textContent = "Loading...";
 
 const errorDiv = document.createElement("div");
 errorDiv.id = "error";
-errorDiv.style.color = "red";
 
 document.body.insertBefore(loadingDiv, output);
 document.body.insertBefore(errorDiv, output);
@@ -19,20 +19,19 @@ const images = [
   { url: "https://picsum.photos/id/239/200/300" },
 ];
 
-// Function to download a single image
+// Function to download one image
 function downloadImage(url) {
   return new Promise((resolve, reject) => {
-    const img = new Image();
+    const img = document.createElement("img");
     img.src = url;
 
     img.onload = () => resolve(img);
-    img.onerror = () => reject(`Failed to load image: ${url}`);
+    img.onerror = () => reject(`Failed to load ${url}`);
   });
 }
 
-// Main function to download all images
+// Main function
 function downloadImages() {
-  // Show loading
   loadingDiv.style.display = "block";
   errorDiv.textContent = "";
   output.innerHTML = "";
@@ -40,23 +39,16 @@ function downloadImages() {
   const promises = images.map(img => downloadImage(img.url));
 
   Promise.all(promises)
-    .then((loadedImages) => {
-      // Hide loading
+    .then((imgs) => {
       loadingDiv.style.display = "none";
 
-      // Display images
-      loadedImages.forEach(img => {
-        output.appendChild(img);
-      });
+      imgs.forEach(img => output.appendChild(img));
     })
-    .catch((error) => {
-      // Hide loading
+    .catch((err) => {
       loadingDiv.style.display = "none";
-
-      // Show error
-      errorDiv.textContent = error;
+      errorDiv.textContent = err;
     });
 }
 
-// Call function (or attach to button if needed)
-downloadImages();
+// ✅ Only trigger on button click
+btn.addEventListener("click", downloadImages);
